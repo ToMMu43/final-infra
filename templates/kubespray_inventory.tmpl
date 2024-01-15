@@ -1,0 +1,41 @@
+[all]
+%{ for index, master_hostname in master_hostnames ~}
+${master_hostname}.${domain} ansible_host=${master_ansible_hosts[index]} ip=${master_ansible_hosts[index]}
+%{ endfor ~}
+%{ for index, worker_hostname in worker_hostnames ~}
+${worker_hostname}.${domain} ansible_host=${worker_ansible_hosts[index]} ip=${worker_ansible_hosts[index]}
+%{ endfor ~}
+%{ for index, ingress_hostname in ingress_hostnames ~}
+${ingress_hostname}.${domain} ansible_host=${ingress_ansible_hosts[index]} ip=${ingress_ansible_hosts[index]}
+%{ endfor ~}
+
+[kube_control_plane]
+%{ for index, master_hostname in master_hostnames ~}
+${master_hostname}.${domain}
+%{ endfor ~}
+
+[etcd]
+%{ for index, master_hostname in master_hostnames ~}
+${master_hostname}.${domain}
+%{ endfor ~}
+
+[kube_node]
+%{ for index, worker_hostname in worker_hostnames ~}
+${worker_hostname}.${domain}
+%{ endfor ~}
+%{ for index, ingress_hostname in ingress_hostnames ~}
+${ingress_hostname}.${domain}
+%{ endfor ~}
+
+[kube_ingress]
+%{ for index, ingress_hostname in ingress_hostnames ~}
+${ingress_hostname}.${domain}
+%{ endfor ~}
+
+[calico_rr]
+
+[k8s_cluster:children]
+kube_node
+kube_control_plane
+kube_ingress
+calico_rr

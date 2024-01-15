@@ -1,0 +1,16 @@
+controller:
+  kind: DaemonSet
+  ingressClassResource:
+    default: true
+  watchIngressWithoutClass: true
+  nodeSelector:
+    node-role.kubernetes.io/ingress: ""
+  hostNetwork: true
+  tolerations:
+    - key: node-role.kubernetes.io/ingress
+      operator: "Exists"
+  service:
+    type: LoadBalancer
+    nodePorts:
+      http: 30080
+      https: 30443
